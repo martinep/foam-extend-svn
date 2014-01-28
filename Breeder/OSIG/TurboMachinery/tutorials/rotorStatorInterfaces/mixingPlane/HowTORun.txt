@@ -1,0 +1,15 @@
+In the controlDict there is a entry saying the following 
+libs ("/home/YourUser/OpenFOAM/YourUser-YourVersion/lib/linuxGccDYourBuild/libRotorStatorInterfaces.so");
+
+The YourUser, YourVersion and YourBuild must be replaced with the correct words.
+Then the blockMeshDict should also recognize the mixingPlane as a new patch after the 
+mesh has been build with blockMesh the boundary file can be edited.
+There are the following entries for a mixingPlane:
+
+shadowPatch Name of the patch which is on the rotor or stator side the mixingPlane
+
+hierarchy : should that be a master or a slave possible entries are: master slave 
+            but only one must be master and the other slave 
+origin (0 0 0); Position of the origin of the cylindrical coordinate system 
+axis ( 0 0 1); Axis of the cylindrical coordinate system 
+direction ( 1 0 0); not so important direction from which the angle is counted .

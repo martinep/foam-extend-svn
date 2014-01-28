@@ -1,0 +1,52 @@
+Description
+===========
+A library that introduces a boundary-condition groovyBC. This boundary
+condition is basically a mixed-BC where value, gradient and valueFraction 
+are specified as expressions
+
+Original Author
+===============
+Bernhard Gschaider (bgschaid@ice-sf.at)
+
+Current Maintainer
+==================
+Bernhard Gschaider (bgschaid@ice-sf.at)
+
+Contributors
+============
+Bernhard Gschaider: basic integration etc stuff
+
+Documentation
+=============
+See: http://openfoamwiki.net/index.php/Contrib_groovyBC
+
+Installation/Compilation
+========================
+
+The library can be compiled with "wmake libso". It doesn't have to be
+installed in a specific location but has to be added to the libs in 
+controlDict
+
+Contents
+========
+
+ - The actual source code for the library
+ - A folder "Demos" with four demo cases. All of these cases only require
+   a blockMesh. The solvers to be used are
+   - pulsedPitzDaily: pisoFoam
+   - wobbler: solidDisplacementFoam
+   - circulatingSplash: interDyMFoam (this one crashes halfway through the calculation)
+   - movingConeDistorted: pimpleDyMFoam
+   - average-t-junction: pimpleFoam
+
+Required OpenFOAM-Version (Known to work with)
+==============================================
+1.5
+1.5-dev
+1.6
+
+History
+=======
+
+ 2009-03-15: Modified so that it compiles on 1.5-dev
+ 2009-08-04: "Ported" to 1.6 (only the Demos had to be adapted)

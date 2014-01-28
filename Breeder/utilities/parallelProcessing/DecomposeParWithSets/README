@@ -1,0 +1,30 @@
+Description
+===========
+Modified version of decomposePar that also writes cellSets and faceSets
+
+"Original" Author
+=================
+OpenCFD
+small modifications by Bernhard Gschaider (bgschaid@ice-sf.at)
+
+Current Maintainer
+==================
+None
+
+Documentation
+=============
+Run like the original decomposePar. If there are faceSets or cellSets in the 
+case they are also decomposed and written to the processor-cases
+
+The utility is the 1.4.1-version of decomposePar with very small additions
+
+Required OpenFOAM-Version (Known to work with)
+==============================================
+1.4.1 
+
+Directory Contents
+==================
+decomposeParWithSets: 	     source code of the utility
+domainDecomposition.C.patch: patch file that modifies an existing decomposePar
+setTest: 		     a simple Test case
+runTest.sh:		     Runs utility on the testcase

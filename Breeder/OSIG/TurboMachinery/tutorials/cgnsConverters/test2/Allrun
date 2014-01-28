@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Execute test2 ------------------------------------------
+pushd ./case >/dev/null
+# generate the mesh
+pushd constant/polyMesh > /dev/null
+m4 -P blockMeshDict.m4 > blockMeshDict
+popd >/dev/null
+blockMesh .. case
+# compute the flow
+echo "Running simpleFoam..."
+simpleFoam .. case >log
+# generate a CGNS file
+foamToCGNS .. case -latestTime 
+popd >/dev/null
+
+# The end.
+echo "Done."

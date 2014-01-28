@@ -1,0 +1,44 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.4                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version 2.0;
+    format ascii;
+
+    root "/opt/Spiderman/bgschaid/Development/openfoam-extend/trunk/Breeder/solvers/other/IcoLagrangianFoam";
+    case "cavityLagrange";
+    instance "constant";
+    local "polyMesh";
+
+    class polyBoundaryMesh;
+    object boundary;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+2
+(
+movingWall
+{
+    type wall;
+    physicalType wall;
+    nFaces 400;
+    startFace 22800;
+}
+
+fixedWalls
+{
+    type wall;
+    physicalType wall;
+    nFaces 2000;
+    startFace 23200;
+}
+)
+
+// ************************************************************************* //

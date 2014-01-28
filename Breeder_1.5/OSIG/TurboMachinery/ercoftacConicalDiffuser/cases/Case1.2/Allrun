@@ -1,0 +1,48 @@
+#!/bin/bash
+# 
+#set -x
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+export caseName=`basename $PWD`
+
+echo "$caseName: Running makeMesh"
+PATH=.:$PATH 
+runApplication makeMesh
+
+echo "$caseName: Creating the starting time directory"
+cp -r 0_orig 0
+
+echo "$caseName: Running addSwirlAndRotation"
+runApplication addSwirlAndRotation
+
+echo "$caseName: Running MRFSimpleFoam"
+runApplication MRFSimpleFoam
+
+echo "$caseName: Postprocessing"
+cd postProcessing
+
+# Find latest time directory
+latestAvailTimeDir=`foamInfoExec -case .. -times | tail -1`
+
+echo "Analysing results for time: $latestAvailTimeDir"
+
+# Run sample
+runApplication sample -case .. -latestTime
+
+# Adjust compareAll.gplt: replace "Case1.2" "??" by "Case1.2" "$latestAvailTimeDir"
+sed -i "s/\"Case1.2\".*$/\"Case1.2\" \"$latestAvailTimeDir\"/g" compareAll.gplt
+
+# Run gnuplot to generate the comparison charts
+runApplication gnuplot compareAll.gplt     ; mv log.gnuplot log.gnuplotCompareAll
+
+# Run foamLog   
+runApplication foamLog ../log.MRFSimpleFoam 
+
+# Run gnuplot for the residuals
+runApplication gnuplot plotResiduals.gplt  ; mv log.gnuplot log.gnuplotPlotResiduals
+
+

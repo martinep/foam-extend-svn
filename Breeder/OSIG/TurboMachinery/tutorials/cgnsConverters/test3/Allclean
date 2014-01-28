@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -rf ./case/log
+rm -rf ./case/50
+rm -rf ./mesh.cgns

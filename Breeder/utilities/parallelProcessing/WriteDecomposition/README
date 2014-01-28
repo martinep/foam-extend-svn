@@ -1,0 +1,26 @@
+Description
+===========
+Writes the decomposition to disk for visualization
+
+"Original" Author
+=================
+Bernhard Gschaider (bgschaid@ice-sf.at)
+
+Current Maintainer
+==================
+Bernhard Gschaider (bgschaid@ice-sf.at)
+
+Documentation
+=============
+Run the utility IN PARALLEL on the decomposed case. After reconstruction 
+there is a field "decomposition" that contains for each cell the number 
+of the processor that "owns" that cell in parallel mode
+
+Required OpenFOAM-Version (Known to work with)
+==============================================
+1.4.1 
+(propably works for older versions, but not tested)
+
+Directory Contents
+==================
+writeDecomposition: source code of the utility

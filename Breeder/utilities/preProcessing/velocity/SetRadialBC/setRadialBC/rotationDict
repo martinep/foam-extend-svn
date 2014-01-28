@@ -1,0 +1,45 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.0                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root	    ".";
+    case 	    "test";
+    instance        "system";
+    local           "";
+
+    class           dictionary;
+    object          radialBCDict;
+}
+
+boundaries
+(
+	TopWall
+	BottomWall
+	f1
+	f2
+	f3
+	f4
+	a2b
+	g4a
+	g4
+	a2aRot
+	g2
+	a1Rot
+);
+
+revsPerMinute -52.36;
+
+rotationVector (0 1 0);
+
+originVector (0 0 0);
+
+// ************************************************************************* //

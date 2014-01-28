@@ -1,0 +1,19 @@
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(FOAM_UTILITIES)/postProcessing/miscellaneous/sampleSurface/surfaces/surface \
+    -I$(FOAM_UTILITIES)/postProcessing/miscellaneous/sampleSurface/surfaces/constantPlane \
+    -I$(FOAM_UTILITIES)/postProcessing/miscellaneous/sampleSurface/surfaces/constantPatch \
+    -I$(FOAM_UTILITIES)/postProcessing/miscellaneous/sampleSurface/surfaces/isoSurface \
+    -I$(FOAM_UTILITIES)/postProcessing/miscellaneous/sampleSurface/surfaceWriters/surfaceWriter \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/triSurface/lnInclude \
+    -I$(LIB_SRC)/lagrangian/basic/lnInclude 
+
+
+LIB_LIBS = \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lsampling \
+    -ltriSurface \
+    -llagrangian 

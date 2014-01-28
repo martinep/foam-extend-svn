@@ -1,0 +1,7 @@
+echo "Now running blockMesh"
+blockMesh > log.blockMesh
+
+echo "Now running simpleFoam"
+simpleFoam > log.simpleFoam
+
+echo "Finished calculating pitzDaily"

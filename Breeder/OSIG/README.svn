@@ -1,0 +1,19 @@
+Description
+===========
+This part of the repository is for OpenFOAM Special Interest Groups projects.
+
+Structure
+=========
+The structure of this part of the repository is very much open. You should try
+stick to a plain OpenFOAM structure as much as possible, but variations are
+also accepted. Hey, this is the Breeder part after all...
+
+
+Maintainer
+==========
+The admins of the openfoam-extend Sourceforge-project
+
+Policy for Contributions
+========================
+Read the Contributors-Guide and apply for write access to the repository.
+Add your contributions in a directory that fits (if unsure: ask)

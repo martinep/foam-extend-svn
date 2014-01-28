@@ -1,0 +1,84 @@
+Description
+===========
+An extension to OpenFOAM that allows you to read equations from a dictionary
+file and (optionally) have them evaluated at every time step.  It is a user-
+installed modification to OpenFOAM's core library.
+
+Original Author
+===============
+David L. F. Gaden (david_gaden@umanitoba.ca)
+
+Current Maintainer
+==================
+David L. F. Gaden (david_gaden@umanitoba.ca)
+
+Contributors
+============
+David L. F. Gaden  : base version
+Bernhard Gschaider : bug fix for OpenFOAM 2.x.x
+
+Documentation
+=============
+Please cite my scientific articles if possible.  I have no publications relevant to equationReader at this time.  Please check back later.
+See: http://openfoamwiki.net/index.php/Contrib_equationReader
+
+Installation/Compilation
+========================
+See: http://openfoamwiki.net/index.php/Contrib_equationReader
+
+Contents
+========
+
+ - The source code for the library, which is located in:
+        src/equationReader
+ - A demo application (equationReaderDemo) that demonstrates the basic use of
+   equationReader.  After installation, this is located in:
+        applications/solvers/equationReader/equationReaderDemo
+ - Tutorial directory for equationReaderDemo is located in:
+   in:
+        tutorials/equationReader/
+
+Required OpenFOAM-Version (Known to work with)
+==============================================
+1.6-ext, 1.7.x, 2.x.x
+
+History
+=======
+
+ 2010-07-21: Initial import
+ 2010-08-05: Differentiated versions for OpenFOAM 1.5.x/1.5-dev and OpenFOAM 1.6+
+ 2010-08-12:
+    * Added IOobject support for automatic output - IOEquationReader
+    * Removed need for pointers
+    * Added support for scalarLists as a data source
+    * Cleaned up available functions
+ 2010-10-16:
+    * Added full support for fields - equationReader can now operate across the
+        entire mesh.
+    * Bug fixes:
+        * Dimension-checking for min and max functions
+        * Moved IOobjects to db directory
+ 2011-04-06:
+    * Major efficiency improvement - pointer functions have been implemented to increase computation speed by an order of magnitude (at least).
+    * Improved dimension-checking on all functions.
+    * Added a fieldEvaluate function for active equations whose output is to a scalar field.
+    * Bug fix to get it working with 1.6-ext and higher.
+ 2011-09-13:
+    * Major upgrade:
+        * Now a stand-alone library.
+        * Now works with most generic types:
+            * scalar;
+            * vector;
+            * tensor;
+            * diagTensor;
+            * symmTensor; and
+            * sphericalTensor.
+        * Now works with GeometricFields
+        * Dimension checking is now performed separately, improving efficiency of field and GeometricField calculations.
+    * Interface changes:
+        * Add data functions reorganized / changed.
+        * Evaluate functions reorganized / changed.
+        * Update functions removed.
+ 2011-09-25: Version 0.5.0
+    * Improved treatment of fields - now approximately 10x faster.
+    * Introduced version numbers to keep track of changes.

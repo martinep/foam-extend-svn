@@ -1,0 +1,25 @@
+Description
+===========
+This part of the repository is for "unfinished" projects.
+
+Versions
+========
+This special part is for stuff that works with OopenFOAM 1.6
+
+Structure
+=========
+The folders "solvers" and "utilities" are structured like the corresponding 
+folders in $FOAM_APP. The folder "libraries" has libraries (stuff that would
+usually go into $FOAM_SRC). "other" is things that don't fit anywhere else 
+(support scripts etc)
+
+The folder OSIG is for OpenFOAM Special Interest Groups.
+
+Maintainer
+==========
+The admins of the openfoam-extend Sourceforge-project
+
+Policy for Contributions
+========================
+Read the Contributors-Guide and apply for write access to the repository.
+Add your contributions in a directory that fits (if unsure: ask)

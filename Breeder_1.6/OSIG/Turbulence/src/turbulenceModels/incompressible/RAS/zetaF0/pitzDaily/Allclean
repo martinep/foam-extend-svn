@@ -1,0 +1,6 @@
+rm -rf 0.* [1-9]*
+rm -f log.*
+
+mv constant/polyMesh/blockMeshDict .
+rm -rf constant/polyMesh/*
+mv blockMeshDict constant/polyMesh/.

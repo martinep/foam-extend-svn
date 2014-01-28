@@ -1,0 +1,39 @@
+#!/bin/bash
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+if [ -d ../ECPGgi2D_orig ] ; then
+     case=ECPGgi2D;                                                                                       ### this part sets
+elif [ -d ../ECPStitchMesh2D_orig ]; then                                                                    ### variable $case to
+      case=ECPStitchMesh2D;                                                                               ### frozenRotorGgi2D or
+else                                                                                                      ### frozenRotorGgi2D
+    echo "sorry, you need to have ECPStitchMesh2D_orig or ECPGgi2D_orig in the current folder";           ### depending on the case studied.
+fi
+
+###--------postprocessing----###
+
+runApplication foamCalc mag U -case ../${case} -latestTime
+mv log.foamCalc log.foamCalc.magU
+runApplication foamCalc components U -case ../${case} -latestTime
+mv log.foamCalc log.foamCalc.componentsU
+runApplication foamLog ../${case}/log.MRFSimpleFoam
+
+###--------sampling---------###
+
+runApplication sample -case ../${case} -latestTime
+
+# Find latest time directory
+latestAvailTimeDir=`foamInfoExec -case ../${case} -times | tail -1`
+
+cp ../${case}/sets/${latestAvailTimeDir}/test_magU_p_k_epsilon_Ux_Uy_Uz.xy .
+paste test_magU_p_k_epsilon_Ux_Uy_Uz.xy teta > postProcessing_data
+
+runApplication gnuplot compareAll.gplt
+
+# Checking if mozilla is available
+if command -v mozilla &>/dev/null ; then
+    mozilla file://$PWD/compareAll.html
+else
+    echo "mozilla: command not found"
+fi
+

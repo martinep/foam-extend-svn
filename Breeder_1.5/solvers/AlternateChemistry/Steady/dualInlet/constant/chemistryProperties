@@ -1,0 +1,64 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.0                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile {
+version             1.0;
+format              ascii;
+root                "";
+case                "example";
+local               "constant";
+class               dictionary;
+form                dictionary;
+object              chemistryProperties;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+chemistry               on;
+
+//Choose the chemistry library:
+
+// chemistryEngine canteraChemistryModel; //Cantera library using fixed chem. time scale.
+chemistryEngine canteraLocalTimeChemistryModel; //Cantera library using local chem. time scale.
+// chemistryEngine chemistryModelProxy; //OpenFoam library.
+// chemistryEngine localTimeChemistryModelProxy; //OpenFoam library using local chem. time scale.
+
+turbulentReaction true;
+Cmix CMix [0 0 0 0 0 0 0] 1.;
+
+steadyChemistryDeltaT 1e-1; //maximum chemical time scale
+
+// ************************************************************************* //
+//options for chemistryRateLimit in Steady solver
+//YEqn stabilisation parameters - to prevent steep changes in Y and T if one of the
+//checks finds a problem (positive result of the check) kappa is reduced.
+
+// 5 - number of performed stabilisation loops
+recalcMax 5;
+
+// 1.001  - maximum YTotal=sum(Yi) allowed (see 1st check)
+YOvershootThreshold 1.001;
+
+// 1e-3 - if deltaY is smaller than this the 2nd check is not performed
+minAbsDeltaY 1e-3;
+
+// 0.1 - if the absolute change of Y is larger than this the 2nd check turns positive
+absDeltaYThres 0.1;
+
+// 0.5 - if the relative change of Y is larger than this the 2nd check turns positive
+relDeltaYThres 1e1;
+
+// 1e-6 - a threshold needed for the calculation of relDeltaY like in case Yold=0
+//relDeltaY = absDeltaY/max(relDeltaYCalcThres,Yold);
+//first it was set to SMALL but this resulted in huge relDeltaY!
+relDeltaYCalcThres 1e-6;
+
+// 0.25 - kappa is scaled by that value if 1st or 2nd check is positive
+kappaScaleDelta 0.25;
+
+// ************************************************************************* //

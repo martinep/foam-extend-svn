@@ -1,0 +1,82 @@
+--- /nfs/Temp/testSVN/trunk/OpenFOAM/applications/utilities/parallelProcessing/decomposePar/domainDecomposition.C	2006-01-24 19:00:43.000000000 +0100
++++ domainDecomposition.C	2006-09-22 15:13:40.000000000 +0200
+@@ -37,6 +37,10 @@
+ #include "Map.H"
+ #include "parallelInfo.H"
+ 
++#include "cellSet.H"
++#include "faceSet.H"
++#include "IOobjectList.H"
++
+ // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+ 
+ // from components
+@@ -80,6 +84,23 @@
+ 
+ bool domainDecomposition::writeDecomposition()
+ {
++    Info <<"\nChecking for face/cell-Sets" << endl;
++
++    IOobjectList objects(*this,time().constant(),polyMesh::meshSubDir/"sets");
++
++    wordList cellSets=objects.names(cellSet::typeName);
++    wordList faceSets=objects.names(faceSet::typeName);
++
++    if(faceSets.size()>0) 
++    {
++        Info << "Found face sets: " << faceSets << endl; 
++    }
++
++    if(cellSets.size()>0) 
++    {
++	Info << "Found cell sets: " << cellSets << endl; 
++    }
++
+     Info<< "\nConstructing processor meshes" << endl;
+ 
+     // Make a lookup map for globally shared points
+@@ -521,6 +542,44 @@
+             << "    Number of cells = " << procMesh.nCells()
+             << endl;
+ 
++	forAll(cellSets,setI) 
++	{
++	    const word &name=cellSets[setI];
++
++	    cellSet sourceSet(*this,name);
++	    cellSet destSet(procMesh,name,NO_READ);
++
++	    forAll(curCellLabels,i) 
++	    {
++	        const label &cellI=curCellLabels[i];
++	        if(sourceSet.found(cellI)) 
++		{
++		    destSet.insert(i);
++		}
++	    }
++	    Info << "    Writing cell set " << name << " with " << destSet.size() << " cells" << endl;
++	    destSet.write();
++	}
++
++	forAll(faceSets,setI) 
++	{
++	    const word &name=faceSets[setI];
++
++	    faceSet sourceSet(*this,name);
++	    faceSet destSet(procMesh,name,NO_READ);
++
++	    forAll(curFaceLabels,i) 
++	    {
++	        const label &faceI=curFaceLabels[i];
++	        if(sourceSet.found(faceI)) 
++		{
++		   destSet.insert(i);
++		}
++	    }
++	    Info << "    Writing face set " << name << " with " << destSet.size() << " faces" << endl;
++	    destSet.write();
++	}
++
+         label nBoundaryFaces = 0;
+ 
+         forAll (procMesh.boundaryMesh(), patchi)

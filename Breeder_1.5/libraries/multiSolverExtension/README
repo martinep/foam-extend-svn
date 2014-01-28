@@ -1,0 +1,56 @@
+Description
+===========
+An extension to OpenFOAM that allows you to run multiple solvers in sequence on the same dataset.
+
+Original Author
+===============
+David L. F. Gaden (david_gaden@umanitoba.ca)
+
+Current Maintainer
+==================
+David L. F. Gaden (david_gaden@umanitoba.ca)
+
+Contributors
+============
+David L. F. Gaden : base version
+
+Documentation
+=============
+See: http://openfoamwiki.net/index.php/Contrib_multiSolver
+
+Installation/Compilation
+========================
+
+To install multiSolver, refer to the instructions on the wiki, as they are most up to date.
+
+Contents
+========
+
+ - The source code for the library, which should end up in:
+        src/multiSolver
+ - A required postprocessing application "multiSolver", which should end up in:
+        applications/utilities/postProcessing/multiSolver
+ - A demo multiSolver application, which should end up in:
+        applications/solvers/multiSolver/multiSolverDemo
+ - A sample test case, which should end up in:
+        tutorials/multiSolver/multiSolverDemo
+
+Required OpenFOAM-Version (Known to work with)
+==============================================
+1.5
+1.5-dev
+1.6
+1.6-ext
+1.7.1
+
+History
+=======
+
+ 2011-06-03: Minor bug fix - parallel decomposing no longer omits the initial directory
+
+ 2011-04-05: Major upgrade - now works for parallel simulations
+
+ 2011-03-29: Minor bug fix for 1.6-ext and 1.7.1
+
+ 2010-07-23: Initial import
+

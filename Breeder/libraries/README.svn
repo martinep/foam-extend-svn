@@ -1,0 +1,9 @@
+Structure
+=========
+
+This directory will be restuctured once it is clear what kind of
+contributions are made (what structure makes sense)
+
+simpleFunctionObjects : A library with simple functionObjects that
+			average, integrate etc fields in the whole
+			volume or on patches

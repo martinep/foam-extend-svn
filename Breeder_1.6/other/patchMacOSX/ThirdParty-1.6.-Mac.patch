@@ -1,0 +1,251 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..c978a17
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,7 @@
++*.dep
++*~
++*.s
++darwin*Debug*/
++darwin*Opt*/
++platforms/
++y.output
+diff --git a/ParMGridGen-1.0/MGridGen/IMlib/IMlib.h b/ParMGridGen-1.0/MGridGen/IMlib/IMlib.h
+index 9d0c85c..0cce518 100644
+--- a/ParMGridGen-1.0/MGridGen/IMlib/IMlib.h
++++ b/ParMGridGen-1.0/MGridGen/IMlib/IMlib.h
+@@ -43,8 +43,12 @@ typedef double realtype;
+ #ifdef DMALLOC
+ #include <dmalloc.h>
+ #else
++#if defined darwinPpc || defined darwinIntel || defined darwinIntel64
++#include <sys/malloc.h>
++#else
+ #include <malloc.h>
+ #endif
++#endif
+ 
+ /*************************************************************************
+ * Data structure definition section
+diff --git a/ParMGridGen-1.0/MGridGen/Lib/Make/options b/ParMGridGen-1.0/MGridGen/Lib/Make/options
+index 021ab63..04db412 100644
+--- a/ParMGridGen-1.0/MGridGen/Lib/Make/options
++++ b/ParMGridGen-1.0/MGridGen/Lib/Make/options
+@@ -5,3 +5,7 @@ TYPE_REAL=-DTYPE_REAL
+ 
+ EXE_INC = -I../IMlib $(TYPE_REAL)
+ LIB_LIBS = -lIMlib
++
++ifneq ($(strip $(DYLD_LIBRARY_PATH)),)
++LINKLIBSO   = $(CC) $(c++FLAGS) -single_module -lpthread -dynamiclib -undefined dynamic_lookup
++endif
+diff --git a/ParMGridGen-1.0/MGridGen/Lib/mgridgen.h b/ParMGridGen-1.0/MGridGen/Lib/mgridgen.h
+index 0c146e1..ab23bdf 100644
+--- a/ParMGridGen-1.0/MGridGen/Lib/mgridgen.h
++++ b/ParMGridGen-1.0/MGridGen/Lib/mgridgen.h
+@@ -26,8 +26,12 @@
+ #ifdef DMALLOC
+ #include <dmalloc.h>
+ #else
++#if defined darwinPpc || defined darwinIntel || defined darwinIntel64
++#include <sys/malloc.h>
++#else
+ #include <malloc.h>
+ #endif
++#endif
+ 
+ #include "defs.h"
+ #include "struct.h"
+diff --git a/ParMetis-3.1/METISLib/stdheaders.h b/ParMetis-3.1/METISLib/stdheaders.h
+index f82b0cb..47d24f8 100644
+--- a/ParMetis-3.1/METISLib/stdheaders.h
++++ b/ParMetis-3.1/METISLib/stdheaders.h
+@@ -16,8 +16,12 @@
+ #ifdef __STDC__
+ #include <stdlib.h>
+ #else
++#if defined darwinPpc || defined darwinIntel || defined darwinIntel64
++#include <sys/malloc.h>
++#else
+ #include <malloc.h>
+ #endif
++#endif
+ #include <string.h>
+ #include <ctype.h>
+ #include <math.h>
+diff --git a/ParMetis-3.1/ParMETISLib/stdheaders.h b/ParMetis-3.1/ParMETISLib/stdheaders.h
+index e30f989..59d33ca 100644
+--- a/ParMetis-3.1/ParMETISLib/stdheaders.h
++++ b/ParMetis-3.1/ParMETISLib/stdheaders.h
+@@ -14,7 +14,11 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#if defined darwinPpc || defined darwinIntel || defined darwinIntel64
++#include <sys/malloc.h>
++#else
+ #include <malloc.h>
++#endif
+ #include <string.h>
+ #include <ctype.h>
+ #include <math.h>
+diff --git a/makeParaView b/makeParaView
+index f215c51..37bc32b 100755
+--- a/makeParaView
++++ b/makeParaView
+@@ -34,6 +34,22 @@
+ #------------------------------------------------------------------------------
+ . tools/makeParaViewFunctions
+ 
++addCMakeVariable "CMAKE_C_COMPILER=$WM_CC"
++addCMakeVariable "CMAKE_CXX_COMPILER=$WM_CXX"
++
++if [[ "$WM_ARCH_OPTION" == "64" ]]
++then
++    # 64 Bit PAraview not yet working
++    addCMakeVariable "CMAKE_C_FLAGS=$WM_CFLAGS"
++    addCMakeVariable "CMAKE_CXX_FLAGS=$WM_CXXFLAGS"
++    #try to switch to Cocoa (Carbon does not work in 64 bit)
++    addCMakeVariable "QT_MAC_USE_COCOA=ON"
++    addCMakeVariable "VTK_USE_CARBON=OFF"
++    addCMakeVariable "VTK_USE_COCOA=ON"
++    # this doesn'T work at all
++   # addCMakeVariable "CMAKE_OSX_ARCHITECTURES=x86_64"
++fi
++
+ # User options:
+ # ~~~~~~~~~~~~~
+ 
+@@ -44,20 +60,25 @@ MPI_MAX_PROCS=32
+ # Python support:
+ # note: script will try to determine the appropriate python library.
+ #       If it fails, specify the path using the PYTHON_LIBRARY variable
+-withPYTHON=false
+-PYTHON_LIBRARY=""
++withPYTHON=true
++# withPYTHON=false
++PYTHON_LIBRARY="/usr/lib/libpython.dylib"
++#PYTHON_LIBRARY=""
+ # PYTHON_LIBRARY="/usr/lib64/libpython2.6.so.1.0"
+ 
+ # MESA graphics support:
+ withMESA=false
+-MESA_INCLUDE="/usr/include/GL"
+-MESA_LIBRARY="/usr/lib64/libOSMesa.so"
++#MESA_INCLUDE="/usr/include/GL"
++#MESA_LIBRARY="/usr/lib64/libOSMesa.so"
++MESA_INCLUDE="/usr/X11/include/GL"
++MESA_LIBRARY="/usr/X11/lib/libOSMesa.dylib"
+ 
+ # extra QT gui support (useful for re-using the installation for engrid)
+ withQTSUPPORT=true
+ 
+ # Set the path to the Qt-4.3.? qmake if the system Qt is other than this version
+-QMAKE_PATH=""
++# QMAKE_PATH=""
++QMAKE_PATH="/usr/bin/qmake-4.3"
+ 
+ #
+ # No further editing below this line
+@@ -216,6 +237,12 @@ getPaths            # discover where things are or should be put
+ # Build and install
+ # ~~~~~~~~~~~~~~~~~
+ [ $runCONFIG  = true ] && configParaView
++for f in $(grep -rl fpascal-strings $ParaView_DIR)
++do
++  # the 4.3 compiler seems not to know these option anymore
++        echo "Patching " $f
++	gsed -i "s.-fpascal-strings..g" $f
++done
+ [ $runMAKE    = true ] && makeParaView
+ [ $runMAKEDOC = true ] && makeDocs
+ [ $runINSTALL = true ] && installParaView
+diff --git a/metis-5.0pre2/GKlib/Make/options b/metis-5.0pre2/GKlib/Make/options
+index 6efbbe4..3de2b43 100644
+--- a/metis-5.0pre2/GKlib/Make/options
++++ b/metis-5.0pre2/GKlib/Make/options
+@@ -1 +1,4 @@
+ /*EXE_INC = -Wno-unused-variables*/
++ifneq ($(strip $(DYLD_LIBRARY_PATH)),)
++LINKLIBSO   = $(CC) $(c++FLAGS) -single_module -lpthread -dynamiclib -undefined dynamic_lookup
++endif
+diff --git a/metis-5.0pre2/GKlib/trunk/dlmalloc.c b/metis-5.0pre2/GKlib/trunk/dlmalloc.c
+index aec1a09..63dec76 100644
+--- a/metis-5.0pre2/GKlib/trunk/dlmalloc.c
++++ b/metis-5.0pre2/GKlib/trunk/dlmalloc.c
+@@ -80,8 +80,10 @@ extern void*     sbrk(ptrdiff_t);
+ #endif /* HAVE_MMAP */
+ 
+ /* START of GK additions */
++#ifndef darwin
+ #include <stddef.h>
+ extern void *sbrk(ptrdiff_t increment);
++#endif
+ /* END of GK additions */
+ 
+ 
+diff --git a/metis-5.0pre2/GKlib/trunk/error.c b/metis-5.0pre2/GKlib/trunk/error.c
+index 70e04a5..7774f1d 100644
+--- a/metis-5.0pre2/GKlib/trunk/error.c
++++ b/metis-5.0pre2/GKlib/trunk/error.c
+@@ -15,6 +15,9 @@ This file contains functions dealing with error reporting and termination
+ 
+ #include <GKlib.h>
+ 
++#if defined darwin
++#define __thread
++#endif
+ 
+ /* This is the jmp_buf for the graceful exit in case of severy error */
+ __thread jmp_buf gk_return_to_entry;
+diff --git a/metis-5.0pre2/GKlib/trunk/gk_externs.h b/metis-5.0pre2/GKlib/trunk/gk_externs.h
+index 7b3633a..5d0964b 100644
+--- a/metis-5.0pre2/GKlib/trunk/gk_externs.h
++++ b/metis-5.0pre2/GKlib/trunk/gk_externs.h
+@@ -15,6 +15,9 @@
+ * Extern variable definition. Hopefully, the __thread makes them thread-safe.
+ **************************************************************************/
+ #ifndef _GK_ERROR_C_
++#if defined darwin
++#define __thread
++#endif
+ extern __thread jmp_buf gk_return_to_entry; /* declared in error.c */
+ #endif
+ 
+diff --git a/scotch_5.1/src/libscotch/y.output b/scotch_5.1/src/libscotch/y.output
+deleted file mode 100644
+index 3f3dde3..0000000
+Binary files a/scotch_5.1/src/libscotch/y.output and /dev/null differ
+diff --git a/tools/makeParaViewFunctions b/tools/makeParaViewFunctions
+index 733e736..13dcc77 100644
+--- a/tools/makeParaViewFunctions
++++ b/tools/makeParaViewFunctions
+@@ -110,7 +110,8 @@ addPythonSupport()
+         }
+ 
+         pythonMajor=$(echo $PYTHON_LIBRARY | sed 's/.*libpython\(.*\)\.so.*/\1/')
+-        pythonInclude=/usr/include/python$pythonMajor
++#        pythonInclude=/usr/include/python$pythonMajor
++        pythonInclude=/System/Library/Frameworks/Python.framework/Headers/
+ 
+         # note - we could also allow for a PYTHON_INCLUDE variable ...
+         [ -d "$pythonInclude" ] || {
+@@ -341,7 +342,7 @@ fixHardLinks()
+             if grep -q "$string" $i
+             then
+                 echo -n "#"
+-                sed -i "s,$string,\$ENV{$envName},g" $i
++                gsed -i "s,$string,\$ENV{$envName},g" $i
+             fi
+         done
+         echo
+@@ -380,7 +381,7 @@ fixCMakeFiles()
+     # (include cmake.check_cache)
+     # This triggers a complete rebuild (with cmake-2.6.2), but is likely
+     # needed when redistributing files
+-    fixHardLinks WM_COMPILER_DIR "$WM_COMPILER_DIR" '*cmake*'
++#    fixHardLinks WM_COMPILER_DIR "$WM_COMPILER_DIR" '*cmake*'
+ }
+ 
+ 
